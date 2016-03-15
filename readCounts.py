@@ -66,8 +66,28 @@ def readCounter(readList, ranMerLen=13):
             counts.append([readList[i],1,[readList[i][-ranMerLen:]]])  # Also keeps list of unique random mers
         if i%1000 == 0: print (round(i/len(readList)*100),"%")  # Progress bar
     for i in range(0,len(counts)):
-        counts[i][2] = len(set(counts[i][2]))  # Converts ranmer list to a set and returns len to get unique reads
+        #counts[i][2] = len(set(counts[i][2]))  #Exact matches: Converts ranmer list to a set and returns len to get unique reads
+        readList[i][2] = uniqueFinder(readList[i][2])
+
     return counts
+
+def uniqueFinder(ranMerList, maxMispair=1):
+    uniqueList = []
+
+    for i in range(0,len(ranMerList)):
+        flag = false
+        if not uniqueList:
+            uniqueList.append(ranMerList[i])
+        else:
+            for j in range(0, len(uniqueList)):
+                if score(ranMerList[i], uniqueList[j]) <= maxMispair:
+                    flag = True
+                    break
+        if not flag:
+            uniqueList.append(ranMerList)
+    return len(uniqueList)
+
+
 
 def writeCSV(counts,ranMerLen, outLoc):
     """Writes counts to a CSV file with a header. ranMerLen has to be at least 1"""
