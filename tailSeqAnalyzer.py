@@ -183,13 +183,11 @@ def csvWriter(tails, outLoc):
     f = open(outLoc, 'w')
     f.write("Sequence, Unique Reads, Gene, 3' end, Tail Length, TailSeq\n")
     for i in range(0,len(tails)):
-        print(tails[i])
         for j in range(0,(len(tails[i]))):
-            f.write(str(tails[i][j]))
+            f.write(str(tails[i][j]).replace(',', '|'))
             f.write(',')
         f.write('\n')
     f.close()
-
 
 
 #####test code
@@ -198,8 +196,6 @@ countLoc = "C:\\Users\\Lab Admin\\Desktop\\TimTemp\\siTOE_no5S.csv"
 outLoc = "C:\\Users\\Lab Admin\\Desktop\\TimTemp\\test.csv"
 RNAseqlist = seqParser(seqLoc)
 counts = countParser(countLoc)
-
-
 tails =[]
 for i in range(0,len(counts)):
     if i == 0: continue
