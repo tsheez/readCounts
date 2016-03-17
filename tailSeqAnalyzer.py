@@ -16,7 +16,7 @@ def seqParser(seqLoc):
         while RNAseqs[d-1] == '\n':
             d -= 1
 
-        RNAseqlist.append([RNAseqs[a+1:b],RNAseqs[c+1:d].replace("\n","")])
+        RNAseqlist.append([RNAseqs[a+1:b].replace(",",""),RNAseqs[c+1:d].replace("\n","")])
 
         x = RNAseqs.find('>', c)
 
@@ -26,10 +26,20 @@ def seqParser(seqLoc):
 
     return RNAseqlist
 #output = nested list [[name, seq],...]
-
 def countParser(countLoc):
+    f=open(countLoc, 'r')
+    counts = f.readlines()
+    f.close()
 
+    countList = []
+    for i in range(0, len(counts)):
+        if i == 0: continue
+        counts[i] = counts[i].split(',')
+        counts[i][1] = int(counts[i][1].rstrip())
+        counts[i][2] = int(counts[i][2].rstrip())
 
+    return counts
+#output = nested list [[read, total counts, unique counts],...]
 def tailSeqAnalyzer(RNAseqlist, read):
     #Sequence, UniqueReads, Gene, 3'end, tailLength, TailSeq
     #read = [sequence, total reads, unique read]
@@ -169,16 +179,30 @@ def tailSeqAnalyzer(RNAseqlist, read):
         tailseq = ''
 
     return [seq, uniqueReads, matchgenelist, end, taillength, tailseq]
-
-
-
-
+def csvWriter(tails, outLoc):
+    f = open(outLoc, 'w')
+    f.write("Sequence, Unique Reads, Gene, 3' end, Tail Length, TailSeq\n")
+    for i in range(0,len(tails)):
+        print(tails[i])
+        for j in range(0,(len(tails[i]))):
+            f.write(str(tails[i][j]))
+            f.write(',')
+        f.write('\n')
+    f.close()
 
 
 
 #####test code
 seqLoc = "C:\\Users\\Lab Admin\\Desktop\\TimTemp\\Human small RNA sequences.txt"
 countLoc = "C:\\Users\\Lab Admin\\Desktop\\TimTemp\\siTOE_no5S.csv"
+outLoc = "C:\\Users\\Lab Admin\\Desktop\\TimTemp\\test.csv"
 RNAseqlist = seqParser(seqLoc)
-tailSeqAnalyzer(RNAseqlist, ['GCTACGCCTGTCTGAGCGTCGCT',0, 20])
-print(tailSeqAnalyzer(RNAseqlist, ['GCTACGCCTGTCTGAGCGTCGCT',0, 20]))
+counts = countParser(countLoc)
+
+
+tails =[]
+for i in range(0,len(counts)):
+    if i == 0: continue
+    tails.append(tailSeqAnalyzer(RNAseqlist, counts[i]))
+    if i%1000 == 0: print (round(i/len(counts)*100),"%")  # Progress bar
+csvWriter(tails, outLoc)
