@@ -1,4 +1,5 @@
 import sys
+from multiprocessing import Pool
 
 def fastqParser(fileLoc, revComp=True):
     """Reads in a fastq formatted file and returns a list of list of reads"""
@@ -66,8 +67,8 @@ def readCounter(readList, ranMerLen=13):
             counts.append([readList[i],1,[readList[i][-ranMerLen:]]])  # Also keeps list of unique random mers
         if i%1000 == 0: print (round(i/len(readList)*100),"%")  # Progress bar
     for i in range(0,len(counts)):
-        #counts[i][2] = len(set(counts[i][2]))  #Exact matches: Converts ranmer list to a set and returns len to get unique reads
-        readList[i][2] = uniqueFinder(readList[i][2])
+        counts[i][2] = len(set(counts[i][2]))  #Exact matches: Converts ranmer list to a set and returns len to get unique reads
+        #readList[i][2] = uniqueFinder(readList[i][2]) #accepts mismatches instead
 
     return counts
 
@@ -87,8 +88,6 @@ def uniqueFinder(ranMerList, maxMispair=1):
             uniqueList.append(ranMerList)
     return len(uniqueList)
 
-
-
 def writeCSV(counts,ranMerLen, outLoc):
     """Writes counts to a CSV file with a header. ranMerLen has to be at least 1"""
 
@@ -99,12 +98,38 @@ def writeCSV(counts,ranMerLen, outLoc):
     for i in range(0, len(counts)):
         outFile.write(counts[i][0][:-ranMerLen]+','+str(counts[i][1])+','+str(counts[i][2])+'\n')
 
+def combiner(pooledCounts):
+    for i in range(0, len(pooledCounts)):
+        if i == 0:
+            master = pooledCounts[i][:]
+            continue
+        for j in range (0, len(pooledCounts[i])):
+            seq = pooledCounts[i][j][0]
+            for k in range(0, len(master)):
+                if pooledCounts[i][j][0] == master[k][0]:
+                    master[k][1] += pooledCounts[i][j][1]
+                    master[k][2] += pooledCounts[i][j][2]
+                else:
+                    master.append(pooledCounts[i][j])
+    return master
+
+
 ############################################################################
 
-inLoc = sys.argv[1]
-outLoc = sys.argv[2]
-ranMerLen = int(sys.argv[3])
+inLoc = "C:\\Users\\Tim\\Desktop\\siTOE-F3_S1_L001_R1_001.fastq"
+outLoc = "C:\\Users\\Tim\\Desktop\\threadtest.csv"
+ranMerLen = 13
 
-reads = fastqParser(inLoc)
-counts = readCounter(reads, ranMerLen)
-writeCSV(counts, ranMerLen, outLoc)
+if __name__=='__main__':
+    #reads = fastqParser(inLoc)
+    reads = ['GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'TCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCTA',\
+             'TCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA',\
+             'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGACCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGGGCGTCGCTTAGTACCACGCGA',\
+             'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'TCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA']
+    slice = int(len(reads)/4)
+    print (slice)
+    with Pool(processes = 8) as pool:
+        pooledCounts = pool.map(readCounter, (reads[:slice],reads[slice:slice*2],reads[slice*2:slice*3], reads[slice*3:]))
+    counts = combiner(pooledCounts)
+    print(counts)
+    #writeCSV(counts, ranMerLen, outLoc)
