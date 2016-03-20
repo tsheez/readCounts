@@ -48,7 +48,7 @@ def score(seq1, seq2):
         if seq1[i] == seq2[i]: score -= 1
     return score
 
-def readCounter(readList, ranMerLen=13):
+def readCounter(readList, ranMerLen=12):
     """Takes a list of string type reads. Builds a new list of lists:
     [(str)The full read, (int)number of times the read is found, (int)unique number of times the read is found]
      ranMerLen has to be at least 1, meaning at least one nt needs to get trimmer, or else it breaks"""
@@ -63,6 +63,7 @@ def readCounter(readList, ranMerLen=13):
                 counts[j][1] += 1
                 counts[j][2].append(readList[i][-ranMerLen:])
                 flag = True
+                break
         if not flag:
             counts.append([readList[i][:-ranMerLen],1,[readList[i][-ranMerLen:]]])  # Also keeps list of unique random mers
         if i%1000 == 0: print (round(i/len(readList)*100),"%")  # Progress bar
@@ -110,6 +111,7 @@ def combiner(pooledCounts):
                 counts[j][1] += combo[i][1]
                 counts[j][2] += combo[i][2]
                 flag = True
+                break
         if not flag:
             counts.append([combo[i][0],combo[i][1],combo[i][2]])  # Also keeps list of unique random mers
         if i%1000 == 0: print (round(i/len(combo)*100),"%")  # Progress bar
@@ -119,24 +121,55 @@ def combiner(pooledCounts):
 
     return counts
 
+def splitter(reads):
+    AA,AC,AG,AT = [],[],[],[]
+    CA,CC,CG,CT = [],[],[],[]
+    GA,GC,GG,GT = [],[],[],[]
+    TA,TC,TG,TT = [],[],[],[]
+    for i in range(0, len(reads)):
+        if reads[i][:2] == 'AA': AA.append(reads[i])
+        elif reads[i][:2] == 'AC': AC.append(reads[i])
+        elif reads[i][:2] == 'AG': AG.append(reads[i])
+        elif reads[i][:2] == 'AT': AT.append(reads[i])
+        elif reads[i][:2] == 'CA': CA.append(reads[i])
+        elif reads[i][:2] == 'CC': CC.append(reads[i])
+        elif reads[i][:2] == 'CG': CG.append(reads[i])
+        elif reads[i][:2] == 'CT': CT.append(reads[i])
+        elif reads[i][:2] == 'GA': GA.append(reads[i])
+        elif reads[i][:2] == 'GC': GC.append(reads[i])
+        elif reads[i][:2] == 'GG': GG.append(reads[i])
+        elif reads[i][:2] == 'GT': GT.append(reads[i])
+        elif reads[i][:2] == 'TA': TA.append(reads[i])
+        elif reads[i][:2] == 'TC': TC.append(reads[i])
+        elif reads[i][:2] == 'TG': TG.append(reads[i])
+        elif reads[i][:2] == 'TT': TT.append(reads[i])
+        else: print('fudge-ums')
+    return(AA,AC,AG,AT,CA,CC,CG,CT,GA,GC,GG,GT,TA,TC,TG,TT)
+
+
 
 ############################################################################
 
 inLoc = "C:\\Users\\Tim\\Desktop\\siTOE-F3_S1_L001_R1_001.fastq"
 outLoc = "C:\\Users\\Tim\\Desktop\\threadtest.csv"
-ranMerLen = 13
 
 if __name__=='__main__':
     reads = fastqParser(inLoc)
-    print(len(reads))
-    '''reads = ['GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'TCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCTA',\
-             'TCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA',\
-             'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGACCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGGGCGTCGCTTAGTACCACGCGA',\
-             'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'TCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA']'''
-    slice = int(len(reads)/4)
-    print (slice)
-    with Pool(processes = 8) as pool:
-        pooledCounts = pool.map(readCounter, (reads[:slice],reads[slice:slice*2],reads[slice*2:slice*3], reads[slice*3:]))
-    counts = combiner(pooledCounts)
-    print(len(counts))
+    print('Read in successful')
+    split = splitter(reads)
+    print('Split successful')
+    for i in split:
+        print (len(i))
+    with Pool(processes=16) as pool:
+        pooledCounts = pool.map(readCounter, split)
+    counts =[]
+    for i in pooledCounts:
+        counts+=i
     writeCSV(counts, outLoc)
+
+
+
+
+
+
+
