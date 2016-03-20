@@ -59,12 +59,12 @@ def readCounter(readList, ranMerLen=13):
         flag = False
         if len(readList[i]) <= ranMerLen: continue  # if for some strange reason the read is shorter than the random mer
         for j in range(0, len(counts)):
-            if readList[i][0:-ranMerLen] == counts[j][0][0:-ranMerLen]:  # looks for matches
+            if readList[i][0:-ranMerLen] == counts[j][0]:  # looks for matches
                 counts[j][1] += 1
                 counts[j][2].append(readList[i][-ranMerLen:])
                 flag = True
         if not flag:
-            counts.append([readList[i],1,[readList[i][-ranMerLen:]]])  # Also keeps list of unique random mers
+            counts.append([readList[i][:-ranMerLen],1,[readList[i][-ranMerLen:]]])  # Also keeps list of unique random mers
         if i%1000 == 0: print (round(i/len(readList)*100),"%")  # Progress bar
     for i in range(0,len(counts)):
         counts[i][2] = len(set(counts[i][2]))  #Exact matches: Converts ranmer list to a set and returns len to get unique reads
@@ -88,7 +88,7 @@ def uniqueFinder(ranMerList, maxMispair=1):
             uniqueList.append(ranMerList)
     return len(uniqueList)
 
-def writeCSV(counts,ranMerLen, outLoc):
+def writeCSV(counts, outLoc):
     """Writes counts to a CSV file with a header. ranMerLen has to be at least 1"""
 
     outFile = open(outLoc, 'w')
@@ -96,22 +96,28 @@ def writeCSV(counts,ranMerLen, outLoc):
     outFile.write('Sequence,Total Reads,Unique Reads\n')  # header
     counts = sorted(counts, key=lambda x:x[1], reverse=True)  # sorts by total reads term
     for i in range(0, len(counts)):
-        outFile.write(counts[i][0][:-ranMerLen]+','+str(counts[i][1])+','+str(counts[i][2])+'\n')
+        outFile.write(counts[i][0]+','+str(counts[i][1])+','+str(counts[i][2])+'\n')
 
 def combiner(pooledCounts):
+    combo = []
+    counts = []
     for i in range(0, len(pooledCounts)):
-        if i == 0:
-            master = pooledCounts[i][:]
-            continue
-        for j in range (0, len(pooledCounts[i])):
-            seq = pooledCounts[i][j][0]
-            for k in range(0, len(master)):
-                if pooledCounts[i][j][0] == master[k][0]:
-                    master[k][1] += pooledCounts[i][j][1]
-                    master[k][2] += pooledCounts[i][j][2]
-                else:
-                    master.append(pooledCounts[i][j])
-    return master
+        combo += pooledCounts[i]
+    for i in range(0, len(combo)):
+        flag = False
+        for j in range(0, len(counts)):
+            if combo[i][0] == counts[j][0]:  # looks for matches
+                counts[j][1] += combo[i][1]
+                counts[j][2] += combo[i][2]
+                flag = True
+        if not flag:
+            counts.append([combo[i][0],combo[i][1],combo[i][2]])  # Also keeps list of unique random mers
+        if i%1000 == 0: print (round(i/len(combo)*100),"%")  # Progress bar
+
+    return counts
+
+
+    return counts
 
 
 ############################################################################
@@ -121,15 +127,16 @@ outLoc = "C:\\Users\\Tim\\Desktop\\threadtest.csv"
 ranMerLen = 13
 
 if __name__=='__main__':
-    #reads = fastqParser(inLoc)
-    reads = ['GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'TCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCTA',\
+    reads = fastqParser(inLoc)
+    print(len(reads))
+    '''reads = ['GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'TCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCTA',\
              'TCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA',\
              'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGACCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGGGCGTCGCTTAGTACCACGCGA',\
-             'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'TCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA']
+             'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'TCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA', 'GCTACGCCTGTCTGAGCGTCGCTTAGTACCACGCGA']'''
     slice = int(len(reads)/4)
     print (slice)
     with Pool(processes = 8) as pool:
         pooledCounts = pool.map(readCounter, (reads[:slice],reads[slice:slice*2],reads[slice*2:slice*3], reads[slice*3:]))
     counts = combiner(pooledCounts)
-    print(counts)
-    #writeCSV(counts, ranMerLen, outLoc)
+    print(len(counts))
+    writeCSV(counts, outLoc)
