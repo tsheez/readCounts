@@ -144,13 +144,34 @@ def splitter(reads):
         elif reads[i][:2] == 'TG': TG.append(reads[i])
         elif reads[i][:2] == 'TT': TT.append(reads[i])
         else: print('fudge-ums')
-    return(AA,AC,AG,AT,CA,CC,CG,CT,GA,GC,GG,GT,TA,TC,TG,TT)
+    return[AA,AC,AG,AT,CA,CC,CG,CT,GA,GC,GG,GT,TA,TC,TG,TT]
+
+def splitter2(splits):
+    out = []
+    for i in range(0,len(splits)):
+        tempA=[]
+        tempC=[]
+        tempG=[]
+        tempT=[]
+        for j in range(0,len(splits[i])):
+            if splits[i][j][2] == 'A': tempA.append(splits[i][j])
+            elif splits[i][j][2] == 'C': tempC.append(splits[i][j])
+            elif splits[i][j][2] == 'G': tempG.append(splits[i][j])
+            elif splits[i][j][2] == 'T': tempT.append(splits[i][j])
+            else: print('Fudge-ums')
+        out.append(tempA)
+        out.append(tempC)
+        out.append(tempG)
+        out.append(tempT)
+    return out
+
+
 
 
 
 ############################################################################
 
-inLoc = "C:\\Users\\Tim\\Desktop\\siTOE-F3_S1_L001_R1_001.fastq"
+inLoc = "C:\\Users\\Tim\\Desktop\\C_S3_L001_R1_001.fastq"
 outLoc = "C:\\Users\\Tim\\Desktop\\threadtest.csv"
 
 if __name__=='__main__':
@@ -158,17 +179,17 @@ if __name__=='__main__':
     print('Read in successful')
     split = splitter(reads)
     print('Split successful')
-    for i in split:
+    split2 = splitter2(split)
+    print('split 2 successful')
+    print(len(split2))
+    for i in split2:
         print (len(i))
-    with Pool(processes=16) as pool:
-        pooledCounts = pool.map(readCounter, split)
+    with Pool(processes=8) as pool:
+        pooledCounts = pool.map(readCounter, split2)
     counts =[]
     for i in pooledCounts:
         counts+=i
     writeCSV(counts, outLoc)
-
-
-
 
 
 
