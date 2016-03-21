@@ -99,28 +99,6 @@ def writeCSV(counts, outLoc):
     for i in range(0, len(counts)):
         outFile.write(counts[i][0]+','+str(counts[i][1])+','+str(counts[i][2])+'\n')
 
-def combiner(pooledCounts):
-    combo = []
-    counts = []
-    for i in range(0, len(pooledCounts)):
-        combo += pooledCounts[i]
-    for i in range(0, len(combo)):
-        flag = False
-        for j in range(0, len(counts)):
-            if combo[i][0] == counts[j][0]:  # looks for matches
-                counts[j][1] += combo[i][1]
-                counts[j][2] += combo[i][2]
-                flag = True
-                break
-        if not flag:
-            counts.append([combo[i][0],combo[i][1],combo[i][2]])  # Also keeps list of unique random mers
-        if i%1000 == 0: print (round(i/len(combo)*100),"%")  # Progress bar
-
-    return counts
-
-
-    return counts
-
 def splitter(reads):
     AA,AC,AG,AT = [],[],[],[]
     CA,CC,CG,CT = [],[],[],[]
@@ -184,7 +162,7 @@ if __name__=='__main__':
     print(len(split2))
     for i in split2:
         print (len(i))
-    with Pool(processes=8) as pool:
+    with Pool(processes=12) as pool:
         pooledCounts = pool.map(readCounter, split2)
     counts =[]
     for i in pooledCounts:
