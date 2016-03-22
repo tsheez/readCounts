@@ -1,3 +1,7 @@
+from multiprocessing import Pool
+from functools import partial
+import sys
+
 def seqParser(seqLoc):
 
     f = open(seqLoc, 'r')
@@ -26,19 +30,32 @@ def seqParser(seqLoc):
 
     return RNAseqlist
 #output = nested list [[name, seq],...]
+def seqParser2(seqLoc):
+    f=open(seqLoc,'r')
+    RNAseqs = f.readlines()
+    f.close()
+    RNAseqlist = []
+    for i in range(0, len(RNAseqs)):
+        if RNAseqs[i][0] == ">":
+            RNAseqlist.append([RNAseqs[i].rstrip(),RNAseqs[i+1].rstrip()])
+    return RNAseqlist
+
+
 def countParser(countLoc):
     f=open(countLoc, 'r')
     counts = f.readlines()
     f.close()
 
-    countList = []
+    countList=[]
     for i in range(0, len(counts)):
         if i == 0: continue
         counts[i] = counts[i].split(',')
         counts[i][1] = int(counts[i][1].rstrip())
         counts[i][2] = int(counts[i][2].rstrip())
+        countList.append(counts[i])
 
-    return counts
+
+    return countList
 #output = nested list [[read, total counts, unique counts],...]
 def tailSeqAnalyzer(RNAseqlist, read):
     #Sequence, UniqueReads, Gene, 3'end, tailLength, TailSeq
@@ -180,6 +197,7 @@ def tailSeqAnalyzer(RNAseqlist, read):
 
     return [seq, uniqueReads, matchgenelist, end, taillength, tailseq]
 def csvWriter(tails, outLoc):
+    tails = sorted(tails, key=lambda x:x[1], reverse=True)
     f = open(outLoc, 'w')
     f.write("Sequence, Unique Reads, Gene, 3' end, Tail Length, TailSeq\n")
     for i in range(0,len(tails)):
@@ -189,16 +207,49 @@ def csvWriter(tails, outLoc):
         f.write('\n')
     f.close()
 
+def splitter(counts, numSplits):
+    split =[]
+    for i in range(0,numSplits):
+        split.append([])
+    for i in range(0,len(counts)):
+        split[i%numSplits].append(counts[i])
+    return split
+
+def tailSeeker(RNAseqlist, readList):
+    tails =[]
+    for i in range(len(readList)):
+        tails.append(tailSeqAnalyzer(RNAseqlist, readList[i]))
+        if i%10 == 0: print (round(i/len(readList)*100),"%")  # Progress bar
+    return tails
 
 #####test code
-seqLoc = "C:\\Users\\Lab Admin\\Desktop\\TimTemp\\Human small RNA sequences.txt"
-countLoc = "C:\\Users\\Lab Admin\\Desktop\\TimTemp\\siTOE_no5S.csv"
-outLoc = "C:\\Users\\Lab Admin\\Desktop\\TimTemp\\test.csv"
-RNAseqlist = seqParser(seqLoc)
-counts = countParser(countLoc)
-tails =[]
-for i in range(0,len(counts)):
-    if i == 0: continue
-    tails.append(tailSeqAnalyzer(RNAseqlist, counts[i]))
-    if i%1000 == 0: print (round(i/len(counts)*100),"%")  # Progress bar
-csvWriter(tails, outLoc)
+'''
+seqLoc = "C:\\Users\\Tim\\Dropbox\\Data\\Resources\\FASTA_Subsets\\all_small_RNA.fa"
+countLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-14-MiSeqAnalysis\\siTOE_no5S_Counts.csv"
+outLoc = "C:\\Users\\Tim\\Desktop\\test.csv"
+processors = 4
+'''
+
+seqLoc = sys.argv[1]
+countLoc = sys.argv[2]
+outLoc = sys.argv[3]
+processors = sys.argv[4]
+
+if __name__=='__main__':
+    RNAseqlist = seqParser2(seqLoc)
+    counts = countParser(countLoc)
+    counts = counts[:10]
+    print('read in successful')
+
+
+    func = partial(tailSeeker, RNAseqlist)
+    split = splitter(counts, processors)
+
+    with Pool(processes=processors) as pool:
+        tailPool = pool.map(func, split )
+
+    tails = []
+    for i in tailPool:
+        tails+=i
+
+    csvWriter(tails, outLoc)

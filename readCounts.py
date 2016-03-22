@@ -166,8 +166,8 @@ def splitter3(splits):
 
 ############################################################################
 
-inLoc = "C:\\Users\\Tim\\Desktop\\C_S3_L001_R1_001.fastq"
-outLoc = "C:\\Users\\Tim\\Desktop\\threadtest.csv"
+inLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-21-MiSeqRaw\\Tails032116-29290347\\siLuc-34379961\\Data\\Intensities\\BaseCalls\\siLuc_S2_L001_R1_001.fastq"
+outLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-22-siLuc-No5S.csv"
 
 if __name__=='__main__':
     reads = fastqParser(inLoc)
@@ -176,14 +176,10 @@ if __name__=='__main__':
     print('Split successful')
     split2 = splitter2(split)
     print('split 2 successful')
-    print(len(split2))
     split3 = splitter3(split2)
     print('split 3 successful')
-    print(len(split3))
-    for i in split3:
-        print (len(i))
     with Pool(processes=12) as pool:
-        pooledCounts = pool.map(readCounter, split2)
+        pooledCounts = pool.map(readCounter, split3)
     counts =[]
     for i in pooledCounts:
         counts+=i

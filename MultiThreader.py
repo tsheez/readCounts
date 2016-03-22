@@ -1,11 +1,11 @@
-import multiprocessing as mp
-def foo(q):
-    q.put('hello')
+def seqParser2(seqLoc):
+    f=open(seqLoc,'r')
+    RNAseqs = f.readlines()
+    f.close()
+    RNAseqlist = []
+    for i in range(0, len(RNAseqs)):
+        if RNAseqs[i][0] == ">":
+            RNAseqlist.append([RNAseqs[i].rstrip(),RNAseqs[i+1].rstrip()])
+    return RNAseqlist
 
-if __name__=='__main__':
-    ctx = mp.get_context('spawn')
-    q = ctx.Queue()
-    p=ctx.Process(target=foo, args=(q,))
-    p.start()
-    print(q.get())
-    p.join()
+seqlist = seqParser2("C:\\Users\\Tim\\Dropbox\\Data\\Resources\\FASTA_Subsets\\all_small_RNA.fa")
