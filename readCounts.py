@@ -161,29 +161,52 @@ def splitter3(splits):
         out.append(tempT)
     return out
 
+def betterSplitter(counts, pos):
+    out = []
+
+    if pos == 0: counts=[counts,]
+    for i in range(len(counts)):
+        tempA=[]
+        tempC=[]
+        tempG=[]
+        tempT=[]
+        for j in range(len(counts[i])):
+            if counts[i][j][pos] == 'A': tempA.append(counts[i][j])
+            elif counts[i][j][pos] == 'C': tempC.append(counts[i][j])
+            elif counts[i][j][pos] == 'G': tempG.append(counts[i][j])
+            elif counts[i][j][pos] == 'T': tempT.append(counts[i][j])
+            else: print('Fudge-ums', counts[i][j])
+        out.append(tempA)
+        out.append(tempC)
+        out.append(tempG)
+        out.append(tempT)
+
+    return out
+
+
 
 
 
 ############################################################################
 
 inLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-21-MiSeqRaw\\Tails032116-29290347\\siLuc-34379961\\Data\\Intensities\\BaseCalls\\siLuc_S2_L001_R1_001.fastq"
-outLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-22-siLuc-No5S.csv"
+outLoc = "C:\\Users\\Tim\\Desktop\\test.csv"
 
 if __name__=='__main__':
     reads = fastqParser(inLoc)
     print('Read in successful')
-    split = splitter(reads)
-    print('Split successful')
-    split2 = splitter2(split)
-    print('split 2 successful')
-    split3 = splitter3(split2)
-    print('split 3 successful')
+
+
+    split = betterSplitter(betterSplitter(betterSplitter(betterSplitter(reads, 0),1),2),3)
+    print(len(split))
+
     with Pool(processes=12) as pool:
-        pooledCounts = pool.map(readCounter, split3)
+        pooledCounts = pool.map(readCounter, split)
     counts =[]
     for i in pooledCounts:
         counts+=i
     writeCSV(counts, outLoc)
+
 
 
 
