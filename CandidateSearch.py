@@ -52,24 +52,6 @@ def filter(tails):
 def analyzer(tails, name):
     count = 0
     endTot = 0
-
-
-######################
-inLoc = "C:\\Users\\Tim\\Desktop\\siTOE_No5S_tails.csv"
-
-tails = tailParser(inLoc)
-
-typeList = ['Mt_rRNA', 'Mt_tRNA', 'miRNA', 'misc_RNA',\
-            'rRNA', 'scRNA', 'snRNA', 'snoRNA',\
-            'ribozyme', 'sRNA', 'scaRNA', '[]']
-tails = filter(tails)
-names = getNames(tails)
-for x in typeList:
-    print(x,'\t', readPercent(tails, x))
-
-for name in names:
-    count = 0
-    endTot = 0
     tailLen = 0
     for tail in tails:
         if name in tail[2]:
@@ -77,4 +59,45 @@ for name in names:
             endTot += (int(tail[3])*numReads)
             tailLen += (int(tail[4])*numReads)
             count += numReads
-    print(name, count, endTot/count, tailLen/count)
+    return [name, count, endTot/count, tailLen/count]
+
+
+######################
+inLoc = "C:\\Users\\Tim\\Desktop\\siTOE_No5S_tails.csv"
+outLoc = "C:\\Users\\Tim\\Desktop\\temp.csv"
+
+readPercentList = []
+filtReadPercentList = []
+analysis = []
+
+
+tails = tailParser(inLoc)
+typeList = ['Mt_rRNA', 'Mt_tRNA', 'miRNA', 'misc_RNA',\
+            'rRNA', 'scRNA', 'snRNA', 'snoRNA',\
+            'ribozyme', 'sRNA', 'scaRNA', '[]']
+
+names = getNames(tails)
+for x in typeList:
+    readPercentList.append([x, readPercent(tails, x)])
+
+filtTails = filter(tails)
+names = getNames(filtTails)
+for x in typeList:
+    filtReadPercentList.append([x, readPercent(filtTails, x)])
+
+for name in names:
+    analysis.append(analyzer(filtTails, name))
+
+
+########CSV Write
+readPercentList = sorted(readPercentList, key=lambda x:x[1], reverse = True)
+filtReadPercentList = sorted(filtReadPercentList, key=lambda x:x[1], reverse = True)
+analysis = sorted(analysis, key=lambda x:x[1], reverse = True)
+
+f = open(outLoc, 'w')
+f.write('\n#\nUnfiltered List\nType,Fraction of Reads\n')
+for x in readPercentList:
+    f.write(x[0]+","+str(x[1])+"\n")
+f.write('\nFiltered List\nType,Fraction of Reads\n')
+for x in filtReadPercentList:
+    f.write(x[0]+","+str(x[1])+"\n")
