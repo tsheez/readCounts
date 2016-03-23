@@ -227,18 +227,17 @@ def tailSeeker(RNAseqlist, readList):
 seqLoc = "C:\\Users\\Tim\\Dropbox\\Data\\Resources\\FASTA_Subsets\\all_small_RNA.fa"
 countLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-14-MiSeqAnalysis\\siTOE_no5S_Counts.csv"
 outLoc = "C:\\Users\\Tim\\Desktop\\test.csv"
-processors = 4
+processors = 8
 '''
-
 seqLoc = sys.argv[1]
 countLoc = sys.argv[2]
 outLoc = sys.argv[3]
-processors = sys.argv[4]
+processors = int(sys.argv[4])
 
 if __name__=='__main__':
     RNAseqlist = seqParser2(seqLoc)
     counts = countParser(countLoc)
-    counts = counts[:10]
+    counts = counts[:1000]
     print('read in successful')
 
 

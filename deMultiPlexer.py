@@ -73,7 +73,7 @@ def score(seq1, seq2):
     return score
 def uniqueFinder(ranMerList, maxMispair=1):
     uniqueList = []
-
+    ranMerList = list(set(ranMerList))
     for i in range(0,len(ranMerList)):
         flag = False
         if not uniqueList:
@@ -99,10 +99,10 @@ def writeCSV(counts,ranMerLen, outLoc, name):
 
 #######################################################################
 
-r1Loc1 = "C:\\Users\\Tim\\Desktop\\AN_S2_L001_R1_001.fastq"
-r2Loc2 = "C:\\Users\\Tim\\Desktop\\AN_S2_L001_R2_001.fastq"
-outLoc = "C:\\Users\\Tim\\Desktop\\test\\"
-manifestLoc = "C:\\Users\\Tim\\Desktop\\manifest2.csv"
+r1Loc1 = "C:\\Users\\Tim\\Desktop\\Tail_S1_L001_R1_001.fastq"
+r2Loc2 = "C:\\Users\\Tim\\Desktop\\Tail_S1_L001_R2_001.fastq"
+outLoc = "C:\\Users\\Tim\\Desktop\\temp\\"
+manifestLoc = "C:\\Users\\Tim\\Desktop\\16-03-22_randommer.csv"
 r1 = fastqParser(r1Loc1)
 print('r1 read in success!')
 r2 = fastqParser(r2Loc2, revComp=False)
@@ -118,6 +118,7 @@ for line in manifest:
     ranMerLen = int(line[4]) + 2
     print(name, barcode, ranMerLen)
     hits = hitFinder(barcode, r1, r2)
+    print(hits[1],"\n",hits[2],'\n',hits[3])
     counts = readCounter(hits, ranMerLen)
     writeCSV(counts, ranMerLen, outLoc,name)
 
