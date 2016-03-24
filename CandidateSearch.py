@@ -63,7 +63,7 @@ def analyzer(tails, name):
 
 
 ######################
-inLoc = "C:\\Users\\Tim\\Desktop\\siTOE_No5S_tails.csv"
+inLoc = "C:\\Users\\Tim\\Desktop\\siLuc_no5S_tails.csv"
 outLoc = "C:\\Users\\Tim\\Desktop\\temp.csv"
 
 readPercentList = []
