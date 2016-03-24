@@ -101,3 +101,11 @@ for x in readPercentList:
 f.write('\nFiltered List\nType,Fraction of Reads\n')
 for x in filtReadPercentList:
     f.write(x[0]+","+str(x[1])+"\n")
+f.write('\n#\n')
+f.write('Gene, Unique Reads, Avg 3\' Loc, Avg Tail Len\n')
+for i in range(len(analysis)):
+    for j in range(len(analysis[i])):
+        f.write(str(analysis[i][j]))
+        f.write(',')
+    f.write('\n')
+f.close()
