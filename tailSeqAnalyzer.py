@@ -219,7 +219,7 @@ def tailSeeker(RNAseqlist, readList):
     tails =[]
     for i in range(len(readList)):
         tails.append(tailSeqAnalyzer(RNAseqlist, readList[i]))
-        if i%10 == 0: print (round(i/len(readList)*100),"%")  # Progress bar
+        if i%100 == 0: print (round(i/len(readList)*100),"%")  # Progress bar
     return tails
 
 #####test code
@@ -237,7 +237,6 @@ processors = int(sys.argv[4])
 if __name__=='__main__':
     RNAseqlist = seqParser2(seqLoc)
     counts = countParser(countLoc)
-    counts = counts[:1000]
     print('read in successful')
 
 
