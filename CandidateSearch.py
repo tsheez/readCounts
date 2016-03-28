@@ -40,7 +40,7 @@ def readPercent(tails, key):
     for i in range(len(tails)):
         if key in tails[i][2]:
             count += int(tails[i][1])
-    return count/totReads
+    return count
 def filter(tails):
     filtTails = []
     filtTails2 = []
@@ -63,8 +63,8 @@ def analyzer(tails, name):
 
 
 ######################
-inLoc = "C:\\Users\\Tim\\Desktop\\siLuc_no5S_tails.csv"
-outLoc = "C:\\Users\\Tim\\Desktop\\temp.csv"
+inLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\siTOE_total_tails.csv"
+outLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\siTOE_total_tailsAnalysis.csv"
 
 readPercentList = []
 filtReadPercentList = []

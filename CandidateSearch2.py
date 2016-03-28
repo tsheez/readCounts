@@ -49,12 +49,16 @@ def tailStats(tail1, tail2, gene):
     tailLen2 = []
     for tail in tail1:
         if gene in tail[2]:
-            threeLoc1.append(int(tail[3]))
-            tailLen1.append(int(tail[4]))
+            repeater(int(tail[3]), threeLoc1, int(tail[1]))
+            repeater(int(tail[4]), tailLen1, int(tail[1]))
+            #threeLoc1.append(int(tail[3]))
+            #tailLen1.append(int(tail[4]))
     for tail in tail2:
         if gene in tail[2]:
-            threeLoc2.append(int(tail[3]))
-            tailLen2.append(int(tail[4]))
+            repeater(int(tail[3]), threeLoc2, int(tail[1]))
+            repeater(int(tail[4]), tailLen2, int(tail[1]))
+            #threeLoc2.append(int(tail[3]))
+            #tailLen2.append(int(tail[4]))
     if not threeLoc1 or not threeLoc2:
         pLoc = "nan"
         pTail = "nan"
@@ -69,12 +73,17 @@ def CSVWriter(stats, outLoc):
         for item in line:
             f.write(str(item)+',')
         f.write('\n')
+def repeater(item, list, reps):
+    for i in range(reps):
+        list.append(item)
+    return
 
 
 
 #######################################
+
 tailLoc1 = "C:\\Users\\Tim\\Desktop\\siLuc_no5S_tails.csv"
-tailLoc2 = "C:\\Users\\Tim\\Desktop\\siTOE_No5S_tails.csv"
+tailLoc2 = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\siTOE_No5S_tails.csv"
 outLoc = "C:\\Users\\Tim\\Desktop\\temp.csv"
 
 tails1 = tailParser(tailLoc1)

@@ -1,6 +1,7 @@
 from multiprocessing import Pool
 from functools import partial
 import sys
+from lncRNA import lncRNAParser
 
 def seqParser(seqLoc):
 
@@ -39,8 +40,6 @@ def seqParser2(seqLoc):
         if RNAseqs[i][0] == ">":
             RNAseqlist.append([RNAseqs[i].rstrip(),RNAseqs[i+1].rstrip()])
     return RNAseqlist
-
-
 def countParser(countLoc):
     f=open(countLoc, 'r')
     counts = f.readlines()
@@ -206,7 +205,6 @@ def csvWriter(tails, outLoc):
             f.write(',')
         f.write('\n')
     f.close()
-
 def splitter(counts, numSplits):
     split =[]
     for i in range(0,numSplits):
@@ -214,17 +212,16 @@ def splitter(counts, numSplits):
     for i in range(0,len(counts)):
         split[i%numSplits].append(counts[i])
     return split
-
 def tailSeeker(RNAseqlist, readList):
     tails =[]
     for i in range(len(readList)):
         tails.append(tailSeqAnalyzer(RNAseqlist, readList[i]))
-        if i%100 == 0: print (round(i/len(readList)*100),"%")  # Progress bar
+        if i%10 == 0: print (round(i/len(readList)*100),"%")  # Progress bar
     return tails
 
 #####test code
-'''
-seqLoc = "C:\\Users\\Tim\\Dropbox\\Data\\Resources\\FASTA_Subsets\\all_small_RNA.fa"
+
+seqLoc = "C:\\Users\\Tim\\Dropbox\\Data\\Resources\\FASTA_Subsets\\gencode.v24.lncRNA_transcripts.fa"
 countLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-14-MiSeqAnalysis\\siTOE_no5S_Counts.csv"
 outLoc = "C:\\Users\\Tim\\Desktop\\test.csv"
 processors = 8
@@ -233,9 +230,11 @@ seqLoc = sys.argv[1]
 countLoc = sys.argv[2]
 outLoc = sys.argv[3]
 processors = int(sys.argv[4])
+'''
 
 if __name__=='__main__':
     RNAseqlist = seqParser2(seqLoc)
+    print(len(RNAseqlist))
     counts = countParser(countLoc)
     print('read in successful')
 
