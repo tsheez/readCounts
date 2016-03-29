@@ -25,7 +25,3 @@ def lncRNAParser(seqLoc):
 
 ########################
 if __name__=="__main__":
-    inLoc = "C:\\Users\\Tim\\Dropbox\\Data\\Resources\\FASTA_Subsets\\all_small_RNA.fa"
-
-    seqs = lncRNAParser(inLoc)
-    print(len(seqs))

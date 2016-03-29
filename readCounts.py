@@ -183,8 +183,16 @@ def betterSplitter(counts, pos):
 
     return out
 
-
-
+def countReads(inLoc):
+    reads = fastqParser(inLoc)
+    reads = reads[:100]
+    split = betterSplitter(betterSplitter(betterSplitter(betterSplitter(reads, 0),1),2),3)
+    with Pool(processes=12) as pool:
+        pooledCounts = pool.map(readCounter, split)
+    counts =[]
+    for i in pooledCounts:
+        counts+=i
+    return counts
 
 
 ############################################################################
@@ -193,6 +201,8 @@ inLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-21-MiSeqRaw\\Tails032116
 outLoc = "C:\\Users\\Tim\\Desktop\\test.csv"
 
 if __name__=='__main__':
+    inLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-21-MiSeqRaw\\Tails032116-29290347\\siLuc-34379961\\Data\\Intensities\\BaseCalls\\siLuc_S2_L001_R1_001.fastq"
+    outLoc = "C:\\Users\\Tim\\Desktop\\test.csv"
     reads = fastqParser(inLoc)
     print('Read in successful')
 

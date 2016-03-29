@@ -83,7 +83,7 @@ def repeater(item, list, reps):
 #######################################
 
 tailLoc1 = "C:\\Users\\Tim\\Desktop\\siLuc_no5S_tails.csv"
-tailLoc2 = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\siTOE_No5S_tails.csv"
+tailLoc2 = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\DE_total_tails.csv"
 outLoc = "C:\\Users\\Tim\\Desktop\\temp.csv"
 
 tails1 = tailParser(tailLoc1)
