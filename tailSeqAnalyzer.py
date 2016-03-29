@@ -1,7 +1,6 @@
 from multiprocessing import Pool
 from functools import partial
-import sys
-from lncRNA import lncRNAParser
+
 
 def seqParser(seqLoc):
 
