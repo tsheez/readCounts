@@ -1,4 +1,4 @@
-import sys
+from functools import partial
 from multiprocessing import Pool
 
 def fastqParser(fileLoc, revComp=True):
@@ -183,11 +183,12 @@ def betterSplitter(counts, pos):
 
     return out
 
-def countReads(inLoc):
+def countReads(inLoc, ranMer):
     reads = fastqParser(inLoc)
     split = betterSplitter(betterSplitter(betterSplitter(betterSplitter(reads, 0),1),2),3)
+    func = partial(readCounter,ranMerLen=12)
     with Pool(processes=12) as pool:
-        pooledCounts = pool.map(readCounter, split)
+        pooledCounts = pool.map(func, split)
     counts =[]
     for i in pooledCounts:
         counts+=i
