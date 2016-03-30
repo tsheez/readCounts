@@ -27,10 +27,10 @@ def subTailSeeker(RNASeqList, countList):
         else:
             sublist = subListMaker(countList[i][3], RNASeqList)
             tails.append(tailSeqAnalyzer(sublist, countList[i]))
-        if i%10000 == 0: print (round(i/len(countList)*100),"%") #Progress bar
+        if i%1000 == 0: print (round(i/len(countList)*100),"%") #Progress bar
     return tails
 
-def main(inLoc, outLoc, dbLoc, ranMerLen=12, blastLoc="blastn.exe", processors = 12):
+def main(inLoc, outLoc, dbLoc, ranMerLen=12, blastLoc="blastn.exe", processors = 13):
     f=open("blastTemp.txt", 'w')
     f.close()
     f=open("queryTemp.txt", 'w')
