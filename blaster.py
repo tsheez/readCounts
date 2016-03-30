@@ -1,10 +1,11 @@
-import subprocess
+import subprocess, os
 from readCounts import countReads
-from tailSeqAnalyzer import tailSeqAnalyzer, seqParser2, csvWriter
+from tailSeqAnalyzer import tailSeqAnalyzer, seqParser2, csvWriter, splitter
+from functools import partial
+from multiprocessing import Pool
 
-
-def queryMaker(readList):
-    f= open("temp.txt", 'w')
+def queryMaker(readList, outLoc="queryTemp.txt"):
+    f= open(outLoc, 'w')
     for i in range(len(readList)):
         f.write(">"+str(i)+"\n")
         f.write(readList[i][0]+"\n")
@@ -17,9 +18,65 @@ def subListMaker(nameList, RNASeqList ):
                 subList.append([RNASeqList[i][0], RNASeqList[i][1]])
                 break
     return subList
+def subTailSeeker(RNASeqList, countList):
+    tails =[]
+
+    for i in range(len(countList)):
+        if not countList[i][3]:
+            tails.append([countList[i][0],countList[i][2], "No local db blast match", "n/a", "n/a", "n/a" ])
+        else:
+            sublist = subListMaker(countList[i][3], RNASeqList)
+            tails.append(tailSeqAnalyzer(sublist, countList[i]))
+        if i%10000 == 0: print (round(i/len(countList)*100),"%") #Progress bar
+    return tails
+
+def main(inLoc, outLoc, dbLoc, ranMerLen=12, blastLoc="blastn.exe", processors = 12):
+    f=open("blastTemp.txt", 'w')
+    f.close()
+    f=open("queryTemp.txt", 'w')
+    f.close()
+    counts = countReads(inLoc, ranMerLen)
+    print("Read Counting Successful")
+    queryMaker(counts)
+    print("Blasting...")
+    subprocess.call([blastLoc, '-db', dbLoc , '-query', "queryTemp.txt", '-out', 'blastTemp.txt', '-outfmt', '6'])
+    print("Blast successful!")
+
+    f = open("blastTemp.txt", 'r')
+    hits = f.readlines()
+    f.close()
+    for x in counts:
+        x.append([])
+    for line in hits:
+        line = line.split('\t')
+        i = int(line[0])
+        counts[i][3].append(line[1])
+
+    RNASeqList = seqParser2(dbLoc)
+
+    print("Analyzing tails...")
+    func = partial(subTailSeeker, RNASeqList)
+    split = splitter(counts, processors)
+
+    with Pool(processes=processors) as pool:
+        tailPool = pool.map(func, split )
+    tails = []
+    for i in tailPool:
+        tails+=i
+
+    print("Writing out to CSV")
+    csvWriter(tails, outLoc)
+    os.remove("queryTemp.txt")
+    os.remove("blastTemp.txt")
+
+
 
 
 if __name__== "__main__":
+    main("C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-09-MiSeqRaw\\C-33927852\\Data\\Intensities\\BaseCalls\\C_S3_L001_R1_001.fastq",\
+         "C:\\Users\\Tim\\Desktop\\test.csv", "all_small_RNA_trim.fa")
+
+    '''
     inLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-09-MiSeqRaw\\C-33927852\\Data\\Intensities\\BaseCalls\\C_S3_L001_R1_001.fastq"
     outLoc = "C:\\Users\\Tim\\Desktop\\test.csv"
     dbLoc = "all_small_RNA_trim.fa"
@@ -66,5 +123,5 @@ if __name__== "__main__":
 
 
     csvWriter(tails, outLoc)
-
+    '''
 

@@ -218,6 +218,7 @@ def tailSeeker(RNAseqlist, readList):
         if i%10 == 0: print (round(i/len(readList)*100),"%")  # Progress bar
     return tails
 
+
 #####test code
 
 seqLoc = "C:\\Users\\Tim\\Dropbox\\Data\\Resources\\FASTA_Subsets\\gencode.v24.lncRNA_transcripts.fa"
