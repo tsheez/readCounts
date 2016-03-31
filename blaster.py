@@ -84,7 +84,7 @@ def main(inLoc, outLoc, dbLoc, ranMerLen=13, blastLoc="blastn.exe", processors =
     os.remove("blastTemp.txt")
 
 if __name__== "__main__":
-    main("C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-09-MiSeqRaw\\C-33927852\\Data\\Intensities\\BaseCalls\\C_S3_L001_R1_001.fastq",\
-         "C:\\Users\\Tim\\Desktop\\test.csv", "C:\\Users\\Tim\\Dropbox\\Data\\Resources\\FASTA_Subsets\\superset.fa")
+    filepath="C:\\Users\\Lab Admin\\Desktop\\Tim\\"
+    main(filepath+"siTOE-F3_S1_L001_R1_001.fastq", filepath+"test.csv", "superset.fa")
 
 
