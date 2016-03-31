@@ -22,15 +22,29 @@ def subTailSeeker(RNASeqList, countList):
     tails =[]
 
     for i in range(len(countList)):
+        tailtemp=[]
+        tailtemp2=[]
         if not countList[i][3]:
             tails.append([countList[i][0],countList[i][2], "No local db blast match", "n/a", "n/a", "n/a" ])
         else:
-            sublist = subListMaker(countList[i][3], RNASeqList)
-            tails.append(tailSeqAnalyzer(sublist, countList[i]))
+            for name in countList[i][3]:
+                sub = subListMaker([name], RNASeqList)
+                tailtemp.append(tailSeqAnalyzer(sub, countList[i]))
+            if not tailtemp:
+                tails.append([countList[i][0],countList[i][2], "Tail Analyzer Failed", "n/a", "n/a", "n/a" ])
+                continue
+
+            for tail in tailtemp:
+                if type(tail[3])==int: tailtemp2.append(tail)
+            if tailtemp2:
+                tailtemp2=sorted(tailtemp2, key=lambda x:abs(x[3]))
+                tails.append(tailtemp2[0])
+            else: tails.append([countList[i][0],countList[i][2], "Tail Analyzer Failed", "n/a", "n/a", "n/a" ])
+
         if i%1000 == 0: print (round(i/len(countList)*100),"%") #Progress bar
     return tails
 
-def main(inLoc, outLoc, dbLoc, ranMerLen=12, blastLoc="blastn.exe", processors = 13):
+def main(inLoc, outLoc, dbLoc, ranMerLen=13, blastLoc="blastn.exe", processors = 6):
     f=open("blastTemp.txt", 'w')
     f.close()
     f=open("queryTemp.txt", 'w')
@@ -69,59 +83,8 @@ def main(inLoc, outLoc, dbLoc, ranMerLen=12, blastLoc="blastn.exe", processors =
     os.remove("queryTemp.txt")
     os.remove("blastTemp.txt")
 
-
-
-
 if __name__== "__main__":
     main("C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-09-MiSeqRaw\\C-33927852\\Data\\Intensities\\BaseCalls\\C_S3_L001_R1_001.fastq",\
-         "C:\\Users\\Tim\\Desktop\\test.csv", "all_small_RNA_trim.fa")
+         "C:\\Users\\Tim\\Desktop\\test.csv", "C:\\Users\\Tim\\Dropbox\\Data\\Resources\\FASTA_Subsets\\superset.fa")
 
-    '''
-    inLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-09-MiSeqRaw\\C-33927852\\Data\\Intensities\\BaseCalls\\C_S3_L001_R1_001.fastq"
-    outLoc = "C:\\Users\\Tim\\Desktop\\test.csv"
-    dbLoc = "all_small_RNA_trim.fa"
-
-    counts = countReads(inLoc, ranMer=12)
-
-    print("count successful", len(counts), "reads")
-
-    queryMaker(counts)
-
-    print("query created")
-
-    subprocess.call(["blastn.exe", '-db', dbLoc , '-query', "temp.txt", '-out', 'temp2.txt', '-outfmt', '6'])
-
-    print("blast finished")
-
-    f = open("temp2.txt", 'r')
-    hits = f.readlines()
-    f.close()
-    for x in counts:
-        x.append([])
-    for line in hits:
-        line = line.split('\t')
-        i = int(line[0])
-        counts[i][3].append(line[1])
-
-    print("counts modified")
-
-    RNASeqList = seqParser2("all_small_RNA_trim.fa")
-
-    print("seqlist created")
-
-    tails = []
-    for i in range(len(counts)):
-        try:
-            if not counts[i][3]:
-                tails.append([counts[i][0],counts[i][2], "No local db blast match", "n/a", "n/a", "n/a" ])
-            else:
-                sublist = subListMaker(counts[i][3], RNASeqList)
-                tails.append(tailSeqAnalyzer(sublist, counts[i]))
-        except IndexError:
-            print(counts[i])
-        if i%1000 == 0: print (round(i/len(counts)*100),"%")
-
-
-    csvWriter(tails, outLoc)
-    '''
 
