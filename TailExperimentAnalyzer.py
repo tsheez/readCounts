@@ -9,6 +9,27 @@ def tailParser(inLoc):
         if i==0: continue
         line = tails[i].split(',')
         tailList.append(line)
+    return tailList
+def getNames(tails):
+    names = []
+    for tail in tails:
+        if tail[2][0]=='[':
+            names.append(tail[2][tail[2].find('[\'>')+3:tail[2].find('|')])
+    return list(set(names))
+def tailFilter(tails):
+    tail1=[]
+    tail2=[]
+    for tail in tails:
+        if 'n/a' not in tail[3]:
+            tail1.append(tail)
+    for tail in tail1:
+        if int(tail[3])>=-10:
+            tail2.append(tail)
+    return tail2
+def typeCounter(tails):
+    typeList = ['Mt_rRNA', 'Mt_tRNA', 'miRNA', 'misc_RNA',\
+            'rRNA', 'scRNA', 'snRNA', 'snoRNA',\
+            'ribozyme', 'sRNA', 'scaRNA', 'lncRNA', 'No local db blast match', 'Tail Analyzer Failed']
 
 
 
@@ -20,3 +41,7 @@ filepath = "C:\\Users\\Lab Admin\\Desktop\\Tim\\"
 inLoc = filepath + "test.csv"
 
 tails = tailParser(inLoc)
+print(len(tails))
+tails = tailFilter(tails)
+print(len(tails))
+print(tails[5])
