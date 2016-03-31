@@ -27,9 +27,19 @@ def tailFilter(tails):
             tail2.append(tail)
     return tail2
 def typeCounter(tails):
+    typeCounts=[]
     typeList = ['Mt_rRNA', 'Mt_tRNA', 'miRNA', 'misc_RNA',\
             'rRNA', 'scRNA', 'snRNA', 'snoRNA',\
-            'ribozyme', 'sRNA', 'scaRNA', 'lncRNA', 'No local db blast match', 'Tail Analyzer Failed']
+            'ribozyme', 'sRNA', 'scaRNA', 'lncRNA', \
+            'No local db blast match', 'Tail Analyzer Failed']
+    for item in typeList:
+        count = 0
+        for tail in tails:
+            if item in tail[2]:
+                count += int(tail[1])
+        typeCounts.append((item, count))
+    return typeCounts
+
 
 
 
@@ -42,6 +52,8 @@ inLoc = filepath + "test.csv"
 
 tails = tailParser(inLoc)
 print(len(tails))
+print(typeCounter(tails))
 tails = tailFilter(tails)
 print(len(tails))
+print(typeCounter(tails))
 print(tails[5])
