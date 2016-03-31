@@ -38,7 +38,42 @@ def typeCounter(tails):
             if item in tail[2]:
                 count += int(tail[1])
         typeCounts.append((item, count))
+    typeCounts = sorted(typeCounts, key=lambda x:x[1], reverse=True)
     return typeCounts
+def transcriptCounter(tails):
+    names = getNames(tails)
+    transcripts=[]
+    for name in names:
+        count = 0
+        for tail in tails:
+            if name in tail[2]:
+                count+=int(tail[1])
+        transcripts.append((name, count))
+    transcripts=sorted(transcripts, key=lambda x:x[1], reverse=True)
+    return transcripts
+
+def main(inLoc, outLoc):
+    tails = tailParser(inLoc)
+    out = open(outLoc, 'w')
+
+    out.write(inLoc+"\n\nUnfiltered\nType,Reads\n")
+    types = typeCounter(tails)
+    for item in types:
+        out.write(item[0]+','+str(item[1])+'\n')
+
+    tails = tailFilter(tails)
+    out.write("\n\nfiltered\nType,Reads\n")
+    types = typeCounter(tails)
+    for item in types:
+        out.write(item[0]+','+str(item[1])+'\n')
+
+    transcripts = transcriptCounter(tails)
+    out.write("\n\nTranscript,Reads\n")
+    for item in transcripts:
+        out.write(item[0]+','+str(item[1])+'\n')
+    out.close()
+
+
 
 
 
@@ -49,11 +84,6 @@ def typeCounter(tails):
 ##################################
 filepath = "C:\\Users\\Lab Admin\\Desktop\\Tim\\"
 inLoc = filepath + "test.csv"
+outLoc = filepath + "test2.csv"
 
-tails = tailParser(inLoc)
-print(len(tails))
-print(typeCounter(tails))
-tails = tailFilter(tails)
-print(len(tails))
-print(typeCounter(tails))
-print(tails[5])
+main(inLoc, outLoc)
