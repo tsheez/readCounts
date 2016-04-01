@@ -81,9 +81,9 @@ def main (inLoc1, inLoc2, outLoc):
 
 ############################
 if __name__=="__main__":
-    inLoc1 = "C:\\Users\\Lab Admin\\Desktop\\AnalysisStrategy2\\siLuc_total_no5S_tails2.csv"
-    inLoc2 = "C:\\Users\\Lab Admin\\Desktop\\AnalysisStrategy2\\siTOE_total_no5S_tails2.csv"
-    outLoc = "C:\\Users\\Lab Admin\\Desktop\\AnalysisStrategy2\\test.csv"
+    inLoc1 = "C:\\Users\\Lab Admin\\Desktop\\AnalysisStrategy2\\siLuc_total_tails2.csv"
+    inLoc2 = "C:\\Users\\Lab Admin\\Desktop\\AnalysisStrategy2\\WT_total_tails2.csv"
+    outLoc = "C:\\Users\\Lab Admin\\Desktop\\AnalysisStrategy2\\Candidates\\siLuc_total_WT_total_compare.csv"
 
     main(inLoc1, inLoc2, outLoc)
 
