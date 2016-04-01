@@ -44,7 +44,7 @@ def subTailSeeker(RNASeqList, countList):
         if i%1000 == 0: print (round(i/len(countList)*100),"%") #Progress bar
     return tails
 
-def main(inLoc, outLoc, dbLoc, ranMerLen=13, blastLoc="blastn.exe", processors = 6):
+def main(inLoc, outLoc, dbLoc, ranMerLen=13, blastLoc="blastn.exe", processors = 16):
     f=open("blastTemp.txt", 'w')
     f.close()
     f=open("queryTemp.txt", 'w')
@@ -84,7 +84,10 @@ def main(inLoc, outLoc, dbLoc, ranMerLen=13, blastLoc="blastn.exe", processors =
     os.remove("blastTemp.txt")
 
 if __name__== "__main__":
-    filepath="C:\\Users\\Lab Admin\\Desktop\\Tim\\"
-    main(filepath+"siTOE-F3_S1_L001_R1_001.fastq", filepath+"test.csv", "superset.fa")
+    inLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-21-MiSeqRaw\\Tails032116-29290347\\siLuc-34379961\\Data\\Intensities\\BaseCalls\\siLuc_S2_L001_R1_001.fastq"
+    outLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\AnalysisStrategy2\\siLuc_total_no5S_tails2.csv"
+    dbLoc = "superset.fa"
+
+    main(inLoc, outLoc, dbLoc)
 
 

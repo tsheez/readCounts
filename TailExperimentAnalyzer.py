@@ -82,8 +82,8 @@ def main(inLoc, outLoc):
 
 
 ##################################
-filepath = "C:\\Users\\Lab Admin\\Desktop\\Tim\\"
-inLoc = filepath + "test.csv"
-outLoc = filepath + "test2.csv"
+
+inLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\AnalysisStrategy2\\WT_total_tails2.csv"
+outLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\AnalysisStrategy2\\WT_total_tails2_analysis.csv"
 
 main(inLoc, outLoc)
