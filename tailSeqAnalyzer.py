@@ -221,16 +221,20 @@ def tailSeeker(RNAseqlist, readList):
 
 #####test code
 
+
+
 seqLoc = "C:\\Users\\Tim\\Dropbox\\Data\\Resources\\FASTA_Subsets\\gencode.v24.lncRNA_transcripts.fa"
 countLoc = "C:\\Users\\Tim\\Dropbox\\Data\\TLS004\\2016-03-14-MiSeqAnalysis\\siTOE_no5S_Counts.csv"
 outLoc = "C:\\Users\\Tim\\Desktop\\test.csv"
 processors = 8
+
 '''
 seqLoc = sys.argv[1]
 countLoc = sys.argv[2]
 outLoc = sys.argv[3]
 processors = int(sys.argv[4])
 '''
+
 
 if __name__=='__main__':
     RNAseqlist = seqParser2(seqLoc)

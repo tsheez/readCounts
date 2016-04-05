@@ -73,7 +73,26 @@ def main(inLoc, outLoc):
         out.write(item[0]+','+str(item[1])+'\n')
     out.close()
 
+def TailExperimentAnalyzer(inLoc, outLoc):
+    tails = tailParser(inLoc)
+    out = open(outLoc, 'w')
 
+    out.write(inLoc+"\n\nUnfiltered\nType,Reads\n")
+    types = typeCounter(tails)
+    for item in types:
+        out.write(item[0]+','+str(item[1])+'\n')
+
+    tails = tailFilter(tails)
+    out.write("\n\nfiltered\nType,Reads\n")
+    types = typeCounter(tails)
+    for item in types:
+        out.write(item[0]+','+str(item[1])+'\n')
+
+    transcripts = transcriptCounter(tails)
+    out.write("\n\nTranscript,Reads\n")
+    for item in transcripts:
+        out.write(item[0]+','+str(item[1])+'\n')
+    out.close()
 
 
 

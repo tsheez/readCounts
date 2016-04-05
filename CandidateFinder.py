@@ -51,8 +51,10 @@ def tailStats(tail1, tail2, gene):
         pLoc = "nan"
         pTail = "nan"
     else:
-        pLoc = stats.ttest_ind(threeLoc1, threeLoc2)[1]
-        pTail = stats.ttest_ind(tailLen1, tailLen2)[1]
+        #pLoc = stats.ttest_ind(threeLoc1, threeLoc2)[1]
+        #pTail = stats.ttest_ind(tailLen1, tailLen2)[1]
+        pLoc = stats.ks_2samp(threeLoc1, threeLoc2)[1]
+        pTail = stats.ks_2samp(tailLen1, tailLen2)[1]
     return gene, len(threeLoc1), np.average(threeLoc1), np.average(tailLen1), len(threeLoc2), np.average(threeLoc2), np.average(tailLen2), pLoc, pTail
 def CSVWriter(stats, outLoc):
     f = open(outLoc, 'w')
@@ -82,8 +84,8 @@ def main (inLoc1, inLoc2, outLoc):
 ############################
 if __name__=="__main__":
     inLoc1 = "C:\\Users\\Lab Admin\\Desktop\\AnalysisStrategy2\\siLuc_total_tails2.csv"
-    inLoc2 = "C:\\Users\\Lab Admin\\Desktop\\AnalysisStrategy2\\WT_total_tails2.csv"
-    outLoc = "C:\\Users\\Lab Admin\\Desktop\\AnalysisStrategy2\\Candidates\\siLuc_total_WT_total_compare.csv"
+    inLoc2 = "C:\\Users\\Lab Admin\\Desktop\\AnalysisStrategy2\\DE_total_tails2.csv"
+    outLoc = "C:\\Users\\Lab Admin\\Desktop\\AnalysisStrategy2\\Candidates\\siLuc_DE_KS.csv"
 
     main(inLoc1, inLoc2, outLoc)
 
