@@ -45,12 +45,18 @@ def subTailSeeker(RNASeqList, countList):
         if i%1000 == 0: print (round(i/len(countList)*100),"%") #Progress bar
     return tails
 
-def main(inLoc, outLoc, outLoc2, dbLoc, ranMerLen=13, blastLoc="blastn.exe", processors = 16):
+def main(inLoc, outLoc, outLoc2, dbLoc, ranMerLen=13, blastLoc="blastn.exe", processors = 16, fivePrimeTrim = 0):
     f=open("blastTemp.txt", 'w')
     f.close()
     f=open("queryTemp.txt", 'w')
     f.close()
     counts = countReads(inLoc, ranMerLen)
+    #####Trimming 5' End #########
+    if fivePrimeTrim:
+        for count in counts:
+            if len(count[0])> fivePrimeTrim + ranMerLen:
+                count[0] = count[0][fivePrimeTrim:]
+    ###############################
     print("Read Counting Successful")
     queryMaker(counts)
     print("Blasting...")
@@ -81,17 +87,17 @@ def main(inLoc, outLoc, outLoc2, dbLoc, ranMerLen=13, blastLoc="blastn.exe", pro
 
     print("Writing out to CSV")
     csvWriter(tails, outLoc)
-    #os.remove("queryTemp.txt")
-    #os.remove("blastTemp.txt")
+    os.remove("queryTemp.txt")
+    os.remove("blastTemp.txt")
 
     TailExperimentAnalyzer(outLoc, outLoc2)
 
 if __name__== "__main__":
-    inLoc = "C:\\Users\\Lab Admin\\Desktop\\"
-    outLoc = "C:\\Users\\Lab Admin\\Desktop\\test1"
-    outLoc2 = "C:\\Users\\Lab Admin\\Desktop\\test2.csv"
+    inLoc = "C:\\Users\\Lab Admin\\Desktop\\2016-03-28-MiSeq_Raw\\Ten_S5_L001_R1_001.fastq"
+    outLoc = "C:\\Users\\Lab Admin\\Desktop\\2016-03-28-MiSeq_Raw\\TLS006 Analysis\\siCcr4e_tails.csv"
+    outLoc2 = "C:\\Users\\Lab Admin\\Desktop\\2016-03-28-MiSeq_Raw\\TLS006 Analysis\\siCcr4e_tails_analysis.csv"
     dbLoc = "superset.fa"
 
-    main(inLoc, outLoc, outLoc2, dbLoc, ranMerLen = 12)
+    main(inLoc, outLoc, outLoc2, dbLoc, ranMerLen = 13, fivePrimeTrim=150)
 
 
