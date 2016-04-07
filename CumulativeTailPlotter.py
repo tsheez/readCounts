@@ -303,14 +303,32 @@ def cumulativeTailPlotter(inLoc, geneList):
             column.append(item[1])
         masterTails.append(column)
 
+    file = open(inLoc.replace('.csv', '_3Pos.csv'), 'w')
+    for i in range(len(master3Pos[0])):
+        for j in range(len(master3Pos)):
+            file.write(str(master3Pos[j][i]))
+            file.write(',')
+        file.write('\n')
+    file.close()
+
+    file = open(inLoc.replace('.csv', '_taillen.csv'), 'w')
+    for i in range(len(masterTails[0])):
+        for j in range(len(masterTails)):
+            file.write(str(masterTails[j][i]))
+            file.write(',')
+        file.write('\n')
+    file.close()
 
 
-        os.remove("SepGeneTemp.txt")
+
+
+
 
 
 
 ##############################
 inLoc = 'C:\\Users\\Tim\\Dropbox\\Data\\TLS005\\TLS006 Analysis\\siLuc_tails.csv'
-geneList = ['RNU6','RNU4']
+geneList = ['RNA5-8S5-207','RNU1-28P-201','RNA5SP202-201',\
+            'RNU5A-1-201','RNU5B-1-201','RNU4-2-201']
 
 cumulativeTailPlotter(inLoc, geneList)
