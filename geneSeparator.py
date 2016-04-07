@@ -26,9 +26,9 @@ def csvWriter(sepGenes, outLoc):
 
 
 ###########################################
-fileLoc = "C:\\Users\\Lab Admin\\Desktop\\TimTemp\\test.csv"
-outLoc = "C:\\Users\\Lab Admin\\Desktop\\TimTemp\\sepGenes.csv"
-key = "RNU6"
+fileLoc = 'C:\\Users\\Tim\\Dropbox\\Data\\TLS005\\TLS006 Analysis\\siLuc_tails.csv'
+outLoc = 'C:\\Users\\Tim\\Dropbox\\Data\\TLS005\\TLS006 Analysis\\test.csv'
+key = "RNU6-3P-201"
 
 sepGenes = geneSeparator(key, fileLoc)
 csvWriter(sepGenes, outLoc)
