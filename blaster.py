@@ -93,11 +93,11 @@ def main(inLoc, outLoc, outLoc2, dbLoc, ranMerLen=13, blastLoc="blastn.exe", pro
     TailExperimentAnalyzer(outLoc, outLoc2)
 
 if __name__== "__main__":
-    inLoc = "C:\\Users\\Lab Admin\\Desktop\\2016-03-28-MiSeq_Raw\\Ten_S5_L001_R1_001.fastq"
-    outLoc = "C:\\Users\\Lab Admin\\Desktop\\2016-03-28-MiSeq_Raw\\TLS006 Analysis\\siCcr4e_tails.csv"
-    outLoc2 = "C:\\Users\\Lab Admin\\Desktop\\2016-03-28-MiSeq_Raw\\TLS006 Analysis\\siCcr4e_tails_analysis.csv"
+    inLoc = "C:\\Users\\Tim\\Desktop\\RawData\\041516 Gene Specific and RIPs-29649369\\WT_RIP-35047758\\Data\\Intensities\\BaseCalls\\WT-RIP_S1_L001_R1_001.fastq"
+    outLoc = "C:\\Users\\Tim\\Desktop\\WT_RIP_tails.csv"
+    outLoc2 = "C:\\Users\\Tim\\Desktop\\WT_RIP_tails_analysis.csv"
     dbLoc = "superset.fa"
 
-    main(inLoc, outLoc, outLoc2, dbLoc, ranMerLen = 13, fivePrimeTrim=150)
+    main(inLoc, outLoc, outLoc2, dbLoc, ranMerLen = 13, fivePrimeTrim=0)
 
 

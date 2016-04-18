@@ -99,10 +99,10 @@ def writeCSV(counts,ranMerLen, outLoc, name):
 
 #######################################################################
 
-r1Loc1 = "C:\\Users\\Lab Admin\\Desktop\\Tails032116-29290347\\Tail-34379960\\Data\\Intensities\\BaseCalls\\Tail_S1_L001_R1_001.fastq"
-r2Loc2 = "C:\\Users\\Lab Admin\\Desktop\\Tails032116-29290347\\Tail-34379960\\Data\\Intensities\\BaseCalls\\Tail_S1_L001_R2_001.fastq"
-outLoc = "C:\\Users\\Lab Admin\\Desktop\\"
-manifestLoc = "C:\\Users\\Lab Admin\\Desktop\\16-03-22_ZFU1-04.csv"
+r1Loc1 = "C:\\Users\\Tim\\Desktop\\RawData\\041516 Gene Specific and RIPs-29649369\\Rea3-35047762\\Data\\Intensities\\BaseCalls\\Rea3_S5_L001_R1_001.fastq"
+r2Loc2 = "C:\\Users\\Tim\\Desktop\\RawData\\041516 Gene Specific and RIPs-29649369\\Rea3-35047762\\Data\\Intensities\\BaseCalls\\Rea3_S5_L001_R2_001.fastq"
+outLoc = "C:\\Users\\Tim\Desktop\\ProcessedData\\705\\"
+manifestLoc = "C:\\Users\\Tim\\Desktop\\RawData\\16-04-15_703.csv"
 r1 = fastqParser(r1Loc1)
 print('r1 read in success!')
 r2 = fastqParser(r2Loc2, revComp=False)

@@ -266,52 +266,50 @@ def geneSepWriter(sepGenes, outLoc):
         f.write('\n')
     f.close()
 
-def cumulativeTailPlotter(inLoc, geneList):
+def cumulativeTailPlotter(inLoc, outLoc, gene):
     master3Pos=[]
     masterTails = []
-    for gene in geneList:
-        geneSeparator(gene, inLoc)
-        geneSepWriter(geneSeparator(gene, inLoc), "SepGeneTemp.txt")
 
-        temps = threePosMaker("SepGeneTemp.txt")
-        threepos = []
-        for temp in temps:
-            threepos.append([temp[0], temp[12]])
-        if not master3Pos:
-            column = []
-            for item in threepos:
-                column.append(item[0])
-            master3Pos.append(column)
-        threepos[0][1] = gene
+    geneSeparator(gene, inLoc)
+    geneSepWriter(geneSeparator(gene, inLoc), "SepGeneTemp.txt")
+
+    temps = threePosMaker("SepGeneTemp.txt")
+    threepos = []
+    for temp in temps:
+        threepos.append([temp[0], temp[12]])
+    if not master3Pos:
         column = []
         for item in threepos:
-            column.append(item[1])
+            column.append(item[0])
         master3Pos.append(column)
+    threepos[0][1] = gene
+    column = []
+    for item in threepos:
+        column.append(item[1])
+    master3Pos.append(column)
 
-        temps = tailLenMaker("SepGeneTemp.txt")
-        tailLen = []
-        for temp in temps:
-            tailLen.append([temp[0], temp[2]])
-        if not masterTails:
-            column=[]
-            for item in tailLen:
-                column.append(item[0])
-            masterTails.append(column)
-        tailLen[0][1] = gene
-        column = []
+    temps = tailLenMaker("SepGeneTemp.txt")
+    tailLen = []
+    for temp in temps:
+        tailLen.append([temp[0], temp[2]])
+    if not masterTails:
+        column=[]
         for item in tailLen:
-            column.append(item[1])
+            column.append(item[0])
         masterTails.append(column)
+    tailLen[0][1] = gene
+    column = []
+    for item in tailLen:
+        column.append(item[1])
+    masterTails.append(column)
 
-    file = open(inLoc.replace('.csv', '_3Pos.csv'), 'w')
+    file = open(outLoc, 'w')
     for i in range(len(master3Pos[0])):
         for j in range(len(master3Pos)):
             file.write(str(master3Pos[j][i]))
             file.write(',')
         file.write('\n')
-    file.close()
-
-    file = open(inLoc.replace('.csv', '_taillen.csv'), 'w')
+    file.write('\n')
     for i in range(len(masterTails[0])):
         for j in range(len(masterTails)):
             file.write(str(masterTails[j][i]))
@@ -323,12 +321,5 @@ def cumulativeTailPlotter(inLoc, geneList):
 
 
 
+################################################
 
-
-
-##############################
-inLoc = 'C:\\Users\\Tim\\Desktop\\ProcessedData\\Seq1\\DE_tails.csv'
-geneList = ['RNA5S17-201','RNA5SP202-201','RNU1-28P-201','RNU5B-1-201','RNU4-2-201','RNA5SP358-201','AC245369.1-201',\
-            'RNU5A-1-201','RNU5E-6P-201','U2.6-201','RNU12-201','U2.19-201','RNU2-2P-201','RNA5S17-201','RNU6-3P-201' ]
-
-cumulativeTailPlotter(inLoc, geneList)

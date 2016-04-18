@@ -82,7 +82,7 @@ def TailExperimentAnalyzer(inLoc, outLoc):
     for item in types:
         out.write(item[0]+','+str(item[1])+'\n')
 
-    tails = tailFilter(tails)
+    #tails = tailFilter(tails)
     out.write("\n\nfiltered\nType,Reads\n")
     types = typeCounter(tails)
     for item in types:
@@ -101,8 +101,8 @@ def TailExperimentAnalyzer(inLoc, outLoc):
 
 
 ##################################
+if __name__=="__main__":
+    inLoc = "C:\\Users\\Lab Admin\\Desktop\\Tim\\test.csv"
+    outLoc = "C:\\Users\\Lab Admin\\Desktop\\Tim\\test_analysis.csv"
 
-inLoc = "C:\\Users\\Lab Admin\\Desktop\\Tim\\test.csv"
-outLoc = "C:\\Users\\Lab Admin\\Desktop\\Tim\\test_analysis.csv"
-
-main(inLoc, outLoc)
+    main(inLoc, outLoc)
