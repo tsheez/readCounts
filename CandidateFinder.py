@@ -67,7 +67,27 @@ def repeater(item, list, reps):
     for i in range(reps):
         list.append(item)
     return
-
+def totalTailStatter(tail1, tail2, gene):
+    totalTails1 = []
+    totalTails2 = []
+    for tail in tail1:
+        if gene in tail[2]:
+            repeater(int(tail[3])+int(tail[4]), totalTails1, int(tail[1]))
+    for tail in tail2:
+        if gene in tail[2]:
+            repeater(int(tail[3])+int(tail[4]), totalTails2, int(tail[1]))
+    if not totalTails1 or not totalTails2:
+        pCombo = "nan"
+    else:
+        pCombo = stats.ks_2samp(totalTails1, totalTails2)[1]
+    return gene, len(totalTails1), np.average(totalTails1), len(threeLoc2), np.average(totalTails2), pCombo
+def CSVWriter2(stats, outLoc):
+    f = open(outLoc, 'w')
+    f.write('Gene'+','+'1-Reads'+','+'1-Total Tails Avg'+','+'2-Reads'+','+'Total Tails Avg'+','+'P-Value 3')
+    for line in stats:
+        for item in line:
+            f.write(str(item)+',')
+        f.write('\n')
 def main (inLoc1, inLoc2, outLoc):
 
     tails1 = tailFilter(tailParser(inLoc1))
@@ -79,7 +99,17 @@ def main (inLoc1, inLoc2, outLoc):
         data.append(tailStats(tails1, tails2, gene))
 
     CSVWriter(data, outLoc)
+def main2 (inLoc1, inLoc2, outLoc):
 
+    tails1 = tailFilter(tailParser(inLoc1))
+    tails2 = tailFilter(tailParser(inLoc2))
+    compiledGenes = set(getNames(tails1) + getNames(tails2))
+
+    data = []
+    for gene in compiledGenes:
+        data.append(totalTailStatter(tails1, tails2, gene))
+
+    CSVWriter2(data, outLoc)
 
 ############################
 if __name__=="__main__":
