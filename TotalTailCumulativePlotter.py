@@ -47,14 +47,12 @@ def cumulativePlotter(totalTails):
     len = 0
     for tail in totalTails:
         len+=tail[1]
-    for i in range(-10, 20):
+    for i in range(-10, 50):
         count = 0
         for tail in totalTails:
             if tail[2]<= i: count+=tail[1]
         out.append((i,count/len))
     return out
-
-
 
 def main(inLoc, gene):
     tails = tailFilter(tailParser(inLoc))
@@ -62,10 +60,10 @@ def main(inLoc, gene):
     tails = totalTailGrabber(tails)
     plot = cumulativePlotter(tails)
     for line in plot:
-        print(line)
+        print(line[0],"\t", line[1])
 
 ####################################
 inLoc = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\siTOE_tails.csv"
-gene = "U1"
+gene = "AC"
 main(inLoc, gene)
 
