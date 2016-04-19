@@ -22,6 +22,28 @@ def scriptPercentage(parsed):
 
 
 
+def main(inLoc1, inLoc2):
+    out = []
+    Tot = scriptPercentage(analysisParser(inLoc1))
+    RIP = scriptPercentage(analysisParser(inLoc2))
+
+    for x in RIP:
+        flag = 0
+        for y in Tot:
+            if x[0] == y[0]:
+                x.append(y[2])
+                flag = 1
+                break
+        if not flag:
+            x.append('nan')
+    for x in RIP:
+        if x[3] == 'nan': pass
+        else:
+            out.append((x[0],(x[2]-x[3])/x[3]))
+    for x in out:
+        print(x)
+
+
 
 
 
@@ -30,9 +52,8 @@ def scriptPercentage(parsed):
 
 
 #####################################
-inLoc1 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\DE_tails_analysis.csv"
-inLoc2
+inLoc1 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\WT_tails_analysis.csv"
+inLoc2 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\041516_RIPS\\WT_RIP_Tails_Analysis.csv"
 
-parsed = analysisParser(inLoc1)
-for x in scriptPercentage(parsed):
-    print(x)
+
+main(inLoc1, inLoc2)
