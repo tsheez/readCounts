@@ -30,8 +30,9 @@ def scriptPercentage(parsed):
 
 
 #####################################
-inLoc = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\DE_tails_analysis.csv"
+inLoc1 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\DE_tails_analysis.csv"
+inLoc2
 
-parsed = analysisParser(inLoc)
+parsed = analysisParser(inLoc1)
 for x in scriptPercentage(parsed):
     print(x)
