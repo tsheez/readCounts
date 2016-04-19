@@ -80,10 +80,10 @@ def totalTailStatter(tail1, tail2, gene):
         pCombo = "nan"
     else:
         pCombo = stats.ks_2samp(totalTails1, totalTails2)[1]
-    return gene, len(totalTails1), np.average(totalTails1), len(threeLoc2), np.average(totalTails2), pCombo
+    return gene, len(totalTails1), np.average(totalTails1), len(totalTails2), np.average(totalTails2), pCombo
 def CSVWriter2(stats, outLoc):
     f = open(outLoc, 'w')
-    f.write('Gene'+','+'1-Reads'+','+'1-Total Tails Avg'+','+'2-Reads'+','+'Total Tails Avg'+','+'P-Value 3')
+    f.write('Gene'+','+'1-Reads'+','+'1-Total Tails Avg'+','+'2-Reads'+','+'Total Tails Avg'+','+'P-Value\n')
     for line in stats:
         for item in line:
             f.write(str(item)+',')
@@ -113,10 +113,10 @@ def main2 (inLoc1, inLoc2, outLoc):
 
 ############################
 if __name__=="__main__":
-    inLoc1 = "C:\\Users\\Tim\\Desktop\\ProcessedData\\Seq1\\siLuc_tails.csv"
-    inLoc2 = "C:\\Users\\Tim\\Desktop\\ProcessedData\\Seq1\\DE_tails.csv"
-    outLoc = "C:\\Users\\Tim\\Desktop\\ProcessedData\\Seq1\\Candidates\\siLuc_DE_compare.csv"
+    inLoc1 = "C:\\Users\\Tim\\Desktop\\ProcessedData\\Seq3\\siLuc_tails.csv"
+    inLoc2 = "C:\\Users\\Tim\\Desktop\\ProcessedData\\Seq3\\Ccr4e_tails.csv"
+    outLoc = "C:\\Users\\Tim\\Desktop\\Processed2\\Ccr4Stuff\\siLuc_Ccr4e_compare.csv"
 
-    main(inLoc1, inLoc2, outLoc)
+    main2(inLoc1, inLoc2, outLoc)
 
 
