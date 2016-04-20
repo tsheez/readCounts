@@ -41,7 +41,7 @@ def main(inLoc1, inLoc2):
         else:
             out.append((x[0],(x[2]-x[3])/x[3]))
     for x in out:
-        print(x)
+        print(x[0], '\t', x[1])
 
 
 

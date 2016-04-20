@@ -35,6 +35,10 @@ def geneSeparator(gene, tails):
     for tail in tails:
         if gene in tail[2]:
             out.append(tail)
+    len = 0
+    for x in out:
+        len+=int(x[1])
+    print(len)
     return out
 def totalTailGrabber(tails):
     totalTails = []
@@ -63,7 +67,10 @@ def main(inLoc, gene):
         print(line[0],"\t", line[1])
 
 ####################################
-inLoc = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\siTOE_tails.csv"
-gene = "AC"
-main(inLoc, gene)
+inLoc1 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\siLuc_tails.csv"
+inLoc2 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\siTOE_tails.csv"
+inLoc3 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\WT_tails.csv"
+inLoc4 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\DE_tails.csv"
+gene = "U2.19-201"
+main(inLoc4, gene)
 

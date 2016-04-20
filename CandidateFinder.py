@@ -88,6 +88,26 @@ def CSVWriter2(stats, outLoc):
         for item in line:
             f.write(str(item)+',')
         f.write('\n')
+def analysisParser(inLoc):
+    transcriptCount=[]
+
+    file = open(inLoc, 'r')
+    file = file.readlines()
+    flag = 0
+    for line in file:
+        if flag:
+            line = line.rstrip().split(",")
+            transcriptCount.append([line[0],int(line[1])])
+        if "Transcript" in line:
+            flag = 1
+    return transcriptCount
+def scriptPercentage(parsed):
+    len = 0
+    for x in parsed:
+        len+=x[1]
+    for x in parsed:
+        x.append(x[1]/len)
+    return parsed
 def main (inLoc1, inLoc2, outLoc):
 
     tails1 = tailFilter(tailParser(inLoc1))
@@ -111,11 +131,12 @@ def main2 (inLoc1, inLoc2, outLoc):
 
     CSVWriter2(data, outLoc)
 
+
 ############################
 if __name__=="__main__":
-    inLoc1 = "C:\\Users\\Tim\\Desktop\\ProcessedData\\Seq3\\siLuc_tails.csv"
-    inLoc2 = "C:\\Users\\Tim\\Desktop\\ProcessedData\\Seq3\\Ccr4e_tails.csv"
-    outLoc = "C:\\Users\\Tim\\Desktop\\Processed2\\Ccr4Stuff\\siLuc_Ccr4e_compare.csv"
+    inLoc1 = "C:\\Users\\Tim\\Desktop\\siLuc_no5S_tails.csv"
+    inLoc2 = "C:\\Users\\Tim\\Desktop\\WT_RIP_Tails.csv"
+    outLoc = "C:\\Users\\Tim\\Desktop\\RIPAnalysis\\siLuc_WTRIP_compare.csv"
 
     main2(inLoc1, inLoc2, outLoc)
 
