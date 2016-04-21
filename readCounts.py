@@ -183,10 +183,10 @@ def betterSplitter(counts, pos):
 
     return out
 
-def countReads(inLoc, ranMer):
+def countReads(inLoc, ranMerLen):
     reads = fastqParser(inLoc)
     split = betterSplitter(betterSplitter(betterSplitter(betterSplitter(reads, 0),1),2),3)
-    func = partial(readCounter,ranMerLen=12)
+    func = partial(readCounter,ranMerLen=ranMerLen)
     with Pool(processes=12) as pool:
         pooledCounts = pool.map(func, split)
     counts =[]

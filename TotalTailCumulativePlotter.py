@@ -67,10 +67,10 @@ def main(inLoc, gene):
         print(line[0],"\t", line[1])
 
 ####################################
-inLoc1 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\siLuc_tails.csv"
-inLoc2 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\siTOE_tails.csv"
-inLoc3 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\WT_tails.csv"
-inLoc4 = "C:\\Users\\Tim\\Dropbox\\ProcessedData\\Seq1\\DE_tails.csv"
-gene = "U2.19-201"
+inLoc1 = "C:\\Users\\Tim\\Desktop\\DoubleChecked\\siLuc_tails.csv"
+inLoc2 = "C:\\Users\\Tim\\Desktop\\DoubleChecked\\siTOE_tails.csv"
+inLoc3 = "C:\\Users\\Tim\\Desktop\\DoubleChecked\\WT_tails.csv"
+inLoc4 = "C:\\Users\\Tim\\Desktop\\DoubleChecked\\DE_tails.csv"
+gene = "U2"
 main(inLoc4, gene)
 
